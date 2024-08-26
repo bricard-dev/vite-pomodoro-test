@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import ToggleButton from './components/ToggleButton';
 import UpdateTimeButton from './components/UpdateTimeButton';
-import { getFormattedValue } from './utils/getFormattedValue';
+import getFormattedValue from './utils/getFormattedValue';
 
 function App() {
   const chronoValues = useSelector((state) => state.chrono);
