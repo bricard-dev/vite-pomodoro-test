@@ -4,9 +4,9 @@ import { updateChronoValue } from '../features/chrono';
 export default function UpdateTimeButton({ sign, type }) {
   const dispatch = useDispatch();
 
-  const handleUpdate = () => {
+  function handleUpdate() {
     dispatch(updateChronoValue({ type, value: sign === '+' ? 60 : -60 }));
-  };
+  }
 
   return (
     <button
