@@ -27,20 +27,30 @@ export const chrono = createSlice({
 
       if (chosenState.value + action.payload.value === 0) return;
 
-      if (action.payload.type === 'session') {
-        if (!state.isPlaying) {
-          chosenState.value += action.payload.value;
-          chosenState.runningValue += action.payload.value;
-          state.displayedValue.value = chosenState.runningValue;
-        } else {
-          chosenState.value += action.payload.value;
-        }
-      } else if (action.payload.type === 'pause') {
+      if (!state.isPlaying) {
+        chosenState.value += action.payload.value;
+        chosenState.runningValue += action.payload.value;
+        state.displayedValue.value = chosenState.runningValue;
+      } else {
         chosenState.value += action.payload.value;
       }
     },
     tick: (state, action) => {
-      console.log('TICK');
+      if (state.session.runningValue > 0) {
+        state.session.runningValue--;
+        state.displayedValue.value = state.session.runningValue;
+        state.displayedValue.heading = 'Work';
+      } else if (state.pause.runningValue > 0) {
+        state.pause.runningValue--;
+        state.displayedValue.value = state.pause.runningValue;
+        state.displayedValue.heading = 'Pause';
+      } else {
+        state.cycles++;
+        state.session.runningValue = state.session.value - 1;
+        state.displayedValue.value = state.session.value - 1;
+        state.displayedValue.heading = 'Work';
+        state.pause.runningValue = state.pause.value;
+      }
     },
     setUpChrono: (state, action) => {
       state.isPlaying = true;
@@ -49,6 +59,12 @@ export const chrono = createSlice({
     resetChrono: (state, action) => {
       state.isPlaying = false;
       window.clearInterval(state.intervalID);
+
+      state.cycles = 0;
+      state.session.runningValue = state.session.value;
+      state.pause.runningValue = state.pause.value;
+      state.displayedValue.value = state.session.value;
+      state.displayedValue.heading = 'Work';
     },
   },
 });
